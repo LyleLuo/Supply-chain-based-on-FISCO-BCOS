@@ -48,7 +48,7 @@ contract supply_chain {
         bank.addr = msg.sender;
     }
 
-    function bank_info() public view returns(string memory, address) {
+    function bank_info() public returns(string memory bank_name,address bank_address) {
         return (bank.name, bank.addr);
     }
 
@@ -62,28 +62,28 @@ contract supply_chain {
     }
 
     //查询公司总资产
-    function getAsset() public returns(uint) {
+    function getAsset() public returns(uint asset) {
         return companies[msg.sender].asset;
     }
 
     //根据账单获取应还账款
-    function getDebt(uint bill_id) public returns(address, uint) {
+    function getDebt(uint bill_id) public returns(address creditor, uint amount) {
         require(bill_id < companies[msg.sender].debts.length, "the query bill does not exist");
-        address creditor = companies[msg.sender].debts[bill_id].creditor;
-        uint amount = companies[msg.sender].debts[bill_id].amount;
-        return (creditor, amount);
+        address tem_creditor = companies[msg.sender].debts[bill_id].creditor;
+        uint tem_amount = companies[msg.sender].debts[bill_id].amount;
+        return (tem_creditor, tem_amount);
     }
 
     //根据账单获取应收账款
-    function getReceipt(uint bill_id) public returns(address, uint) {
+    function getReceipt(uint bill_id) public returns(address borrer, uint amount) {
         require(bill_id < companies[msg.sender].receipts.length, "the query bill does not exist");
-        address borrer = companies[msg.sender].receipts[bill_id].borrer;
-        uint amount = companies[msg.sender].receipts[bill_id].amount;
-        return (borrer, amount);
+        address tem_borrer = companies[msg.sender].receipts[bill_id].borrer;
+        uint tem_amount = companies[msg.sender].receipts[bill_id].amount;
+        return (tem_borrer, tem_amount);
     }
     
     //获取一个公司总的应还账款（总负债额）
-    function get_total_debt() public returns(uint) {
+    function get_total_debt() public returns(uint total_debt) {
         uint total = 0;
         for(uint i = 0; i < companies[msg.sender].debts.length; ++i)
         {
@@ -94,7 +94,7 @@ contract supply_chain {
     }    
 
     //获取一个公司总的应收账款（总放债额）
-    function get_total_receipt() public returns(uint) {
+    function get_total_receipt() public returns(uint total_receipt) {
         uint total = 0;
         for(uint i = 0; i < companies[msg.sender].receipts.length; ++i)
         {
